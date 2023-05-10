@@ -1,5 +1,6 @@
 import express from "express";
-import { createEmployee, deleteEmployee, getAllEmployees, getParticularEmployee, homePage, updateEmployee } from "./controllers/employeeController.js";
+import {  homePage,loginUser,fetchUserProfile,unfollowUser,followUser,verifyToken } from "./controllers/UserController.js";
+import {fetchAllPosts,fetchPostDetails,commentPost,unlikePost,likePost,deletePost,createPost} from "./controllers/PostController.js";
 import mongoose from "mongoose";
 
 const app = express();
@@ -28,13 +29,25 @@ app.use(express.urlencoded({extended:false}));
 
 app.get("/",homePage);
 
-app.get("/employee",getAllEmployees);
+app.post("/api/authenticate",loginUser);
 
-app.get("/employee/:id",getParticularEmployee);
+app.patch("/api/follow/:id",verifyToken,followUser);
 
-app.post("/employee",createEmployee);
+app.post("/api/unfollow/:id",verifyToken,unfollowUser);
 
-app.put("/employee/:id",updateEmployee);
+app.get("/api/user",verifyToken,fetchUserProfile);
 
-app.delete("/employee/:id",deleteEmployee);
+app.post("/api/posts",verifyToken,createPost);
+
+app.delete("/api/posts/:id",verifyToken,deletePost);
+
+app.post("/api/like/:id",verifyToken,likePost);
+
+app.post("/api/unlike/:id",verifyToken,unlikePost);
+
+app.post("/api/comment/:id",verifyToken,commentPost);
+
+app.get("/api/posts/:id",verifyToken,fetchPostDetails);
+
+app.get("/api/all_posts",verifyToken,fetchAllPosts);
 
